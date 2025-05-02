@@ -9,6 +9,7 @@ import requests
 from typing import List
 from openai import OpenAI
 from env import API_KEY
+from env import GOOGLE_SCRIPT_URL
 
 app = FastAPI()
 
@@ -118,7 +119,7 @@ async def upload_file(file: UploadFile = File(...),number: int = Form(...)):
     
 
 
-GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZPA8FmhibQuS8oNNwJlonxWZ_8Cef1Kj8CG2k3TlUZyeP4EjAhzyktE7IowcOJ-MpFQ/exec"
+GOOGLE_SCRIPT_URL = GOOGLE_SCRIPT_URL
 class Question(BaseModel):
     question: str
     options: List[str]
