@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Box, Container, Typography, Tabs, Tab, Paper, Input, Button, TextField, IconButton } from "@mui/material";
+import { Box, Container, Typography, Tabs, Tab, Paper, Input, Button, TextField, IconButton, Select, MenuItem } from "@mui/material";
 import NavBar from "../components/NavBar";
 import { Toaster, toast } from 'react-hot-toast';
 import { Modal } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { InputLabel } from "@mui/material";
+import { FormControl } from "@mui/material";
 
 export default function Quiz() {
     const url = "http://127.0.0.1:8000";
@@ -17,6 +19,7 @@ export default function Quiz() {
     const [editData, setEditData] = useState([]);
     const [formLink, setFormLink] = useState(null)
     const [editUrl, setEditUrl] = useState(null);
+    const [number, setNumber] = useState(null)
     // const [data, setData] = useState({
     //     questions: [
     //         {
@@ -38,13 +41,15 @@ export default function Quiz() {
     // });
 
     const handleGenerateQuiz = async () => {
+        setFormLink(null)
+        setEditUrl(null)
         setLinkLoading(true);
         const payload = {
             questions: data.questions.map(q => ({
                 question: q.question,
                 options: q.options,
                 correct_answer: q.correct_answer
-            }))
+            })),
         };
         try {
             const response = await fetch("http://127.0.0.1:8000/generate-form", {
@@ -88,9 +93,16 @@ export default function Quiz() {
             toast.error("Please select a file");
             return;
         }
+        if (!number) {
+            toast.error("Please select the number of questions");
+            return;
+        }
+        setFormLink(null)
+        setEditUrl(null)
         setData([])
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("number", number);
         try {
             setLoading(true);
             const resp = await fetch(`${url}/upload`, {
@@ -192,6 +204,27 @@ export default function Quiz() {
                                     className="w-full border p-2 rounded cursor-pointer bg-gray-100"
                                     onChange={handleFileChange}
                                 />
+                                <FormControl fullWidth >
+                                    <InputLabel id="question-select-label">Number of Questions</InputLabel>
+                                    <Select
+                                        labelId="question-select-label"
+                                        value={number || ''}
+                                        onChange={(e) => setNumber(e.target.value)}
+                                        label="Number of Questions"
+                                        sx={{
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: 'rgba(0, 0, 0, 0.23)' // Default border color
+                                            },
+                                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: 'rgba(0, 0, 0, 0.87)' // Darker on hover
+                                            }
+                                        }}
+                                    >
+                                        <MenuItem value="" disabled>Select</MenuItem>
+                                        <MenuItem value={5}>5 Questions</MenuItem>
+                                        <MenuItem value={10}>10 Questions</MenuItem>
+                                    </Select>
+                                </FormControl>
                                 <Typography variant="caption" className="text-gray-500">
                                     Only PDF, PPT, and PPTX files are allowed.
                                 </Typography>
@@ -254,17 +287,17 @@ export default function Quiz() {
                                         !linkLoading && (
 
                                             <>
-                                            
-                                            {data?.questions?.length > 1 && (
-                                                <Button variant="contained" color="success" sx={{ mt: 1 }} onClick={handleEdit}>
-                                                    Edit
-                                                </Button>
-                                            )}
-                                            {data?.questions?.length > 1 && (
-                                                <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={handleGenerateQuiz}>
-                                                    Generate Quiz Link
-                                                </Button>
-                                            )}
+
+                                                {data?.questions?.length > 1 && (
+                                                    <Button variant="contained" color="success" sx={{ mt: 1 }} onClick={handleEdit}>
+                                                        Edit
+                                                    </Button>
+                                                )}
+                                                {data?.questions?.length > 1 && (
+                                                    <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={handleGenerateQuiz}>
+                                                        Generate Quiz Link
+                                                    </Button>
+                                                )}
                                             </>
                                         )
                                     )}
@@ -300,52 +333,7 @@ export default function Quiz() {
                                         )
                                     )}
                                 </div>
-                                {/* <Box sx={{ display: 'flex', gap: 2 }}>
-                                    {formLink ? (
-                                        <div className="flex gap-2">
-                                            {linkLoading ? (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mt-2"></span>
-                                                    <span>Generating link...</span>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        href={formLink}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                    >
-                                                        Form Link
-                                                    </Button>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="success"
-                                                        href={editUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                    >
-                                                        View Responses
-                                                    </Button>
-                                                </>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="flex gap-2">
-                                            {data?.questions?.length > 1 && (
-                                                <Button variant="contained" color="success" sx={{ mt: 1, }} onClick={handleEdit}>
-                                                    Edit
-                                                </Button>
-                                            )}
-                                            {data?.questions?.length > 1 && (
-                                                <Button variant="contained" color="primary" sx={{ mt: 1, }} onClick={handleGenerateQuiz} >
-                                                    Generate Quiz Link
-                                                </Button>
-                                            )}
-                                        </div>
-                                    )}
-                                </Box> */}
+
                             </Box>
                         </Box>
 

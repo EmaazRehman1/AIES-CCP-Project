@@ -4,25 +4,33 @@ import ollama
 from pydantic import BaseModel
 import json
 import re
-# from pptx import Presentation 
-import fitz  # PyMuPDF for PDF extraction
+import fitz  
 import requests
 from typing import List
+from openai import OpenAI
+import os
 
 app = FastAPI()
-client = ollama.Client()
 
-# Enable CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow requests only from your React frontend
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=API_KEY,  
 )
 
-model = "mistral"
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
+# model = "mistral"
+model = "nvidia/llama-3.3-nemotron-super-49b-v1:free"
 class RequestData(BaseModel):
     prompt: str
 
@@ -58,14 +66,14 @@ async def extract_text_from_pdf(file: UploadFile):
 
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...),number: int = Form(...)):
     text =await extract_text_from_pdf(file)
     print(text)
     prompt = f""" [INST] <<SYS>>
     IMPORTANT:You MUST respond with ONLY valid JSON in the EXACT format specified below. 
     DO NOT include any additional text, explanations, or markdown formatting.
     
-    Generate exactly 5 multiple-choice questions (MCQs) based on the following text.
+    Generate exactly {number} multiple-choice questions (MCQs) based on the following text.
     Ensure that:
     1. Each question is directly based on facts from the text.
     2. Each question has exactly four options.
@@ -82,40 +90,36 @@ async def upload_file(file: UploadFile = File(...)):
                 "options": ["Option 1", "Option 2", "Option 3", "Option 4"], 
                 "correct_answer": "Correct option" 
             }},
-            // Repeat for 5 questions total
+            // Repeat for {number} questions total
         ]
     }}
     <</SYS>>
 
-    Generate 5 MCQs using:
+    Generate {number} MCQs using:
     1. The provided text (for context)
     2. Your own knowledge (to enhance questions if needed)
     Text to base questions on:
     {text}
     [/INST]"""
 
-    response = client.generate(
-        model=model,
-        prompt=prompt,
-        format="json",  # Explicitly request JSON format
-        options={
-            "temperature": 0.3,  # Lower for more structured output
-            "top_p": 0.9,
-            "num_ctx": 8192  # Fixed seed for reproducibility
-            }
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            top_p=0.9,
+            extra_headers={
+                "HTTP-Referer": "http://localhost:3000",
+                "X-Title": "MCQ Generator App",
+            },
         )
-    print("Repsonse",response)
-    mcq_data = response['response'].strip()
+        mcq_data = response.choices[0].message.content.strip()
+        mcq_json = json.loads(mcq_data)
+        return {"message": "MCQs generated successfully", "data": mcq_json}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI error: {str(e)}")
+    
 
-    mcq_json= json.loads(mcq_data)
-
-    if not mcq_json:
-        raise HTTPException(status_code=400, detail="Invalid JSON format from AI model")
-
-    return {
-        "message": "MCQs generated successfully",
-        "data": mcq_json
-    }
 
 GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZPA8FmhibQuS8oNNwJlonxWZ_8Cef1Kj8CG2k3TlUZyeP4EjAhzyktE7IowcOJ-MpFQ/exec"
 class Question(BaseModel):
@@ -129,7 +133,6 @@ class QuizRequest(BaseModel):
 @app.post("/generate-form")
 async def generate_form(quiz: QuizRequest):
     try:
-        # Send data exactly as Google Script expects it
         payload = {"questions": [q.dict() for q in quiz.questions]}
         
         response = requests.post(
@@ -138,7 +141,6 @@ async def generate_form(quiz: QuizRequest):
             headers={'Content-Type': 'application/json'}
         )
         
-        # Check for HTTP errors
         response.raise_for_status()
         
         return response.json()
