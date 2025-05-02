@@ -8,13 +8,9 @@ import fitz
 import requests
 from typing import List
 from openai import OpenAI
-import os
+from env import API_KEY
 
 app = FastAPI()
-
-from dotenv import load_dotenv
-load_dotenv()
-API_KEY = os.getenv("API_KEY")
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -31,6 +27,7 @@ app.add_middleware(
 
 # model = "mistral"
 model = "nvidia/llama-3.3-nemotron-super-49b-v1:free"
+
 class RequestData(BaseModel):
     prompt: str
 

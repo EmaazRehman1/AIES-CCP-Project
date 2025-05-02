@@ -117,7 +117,7 @@ export default function Quiz() {
             console.log("resp", resp)
             console.log(data.data)
         } catch (e) {
-            console.log(e);
+            toast.error(e.message || "Failed to upload file");
         } finally {
             setLoading(false)
         }
