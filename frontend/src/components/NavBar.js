@@ -15,7 +15,7 @@ export default function NavBar() {
         <AppBar position="static" className="shadow-md" sx={{ background: (theme) => theme.palette.primary.main }}>
             <Toolbar className="flex justify-between">
                 <Box className="flex items-center gap-3" onClick={() => navigate('/')}>
-                    <img src={logo} alt="Logo" className="w-10 h-10" />
+                    {/* <img src={logo} alt="Logo" className="w-10 h-10" /> */}
                     <Typography
                         variant="h6"
                         className="font-bold"
@@ -23,7 +23,7 @@ export default function NavBar() {
                             color: (theme) => theme.palette.secondary.main, // Text color change
                         }}
                     >
-                        QuizGenAi
+                        Quizify
                     </Typography>
 
                 </Box>

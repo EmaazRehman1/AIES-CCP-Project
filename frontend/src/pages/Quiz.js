@@ -190,7 +190,7 @@ export default function Quiz() {
                     </Tabs>
                 </Paper> */}
 
-                <Box className="mt-2 p-4 w-full text-center">
+                <Box className="p-4 w-full text-center">
                     {activeTab === 0 && (
                         <Box className="flex flex-col gap-4 p-4 w-full max-w-md mx-auto">
                             <Typography variant="body1" className="text-center text-gray-600">
@@ -200,7 +200,7 @@ export default function Quiz() {
                             <Box className="flex flex-col items-center gap-2">
                                 <Input
                                     type="file"
-                                    accept=".pdf,.ppt,.pptx"
+                                    accept=".pdf"
                                     className="w-full border p-2 rounded cursor-pointer bg-gray-100"
                                     onChange={handleFileChange}
                                 />
@@ -226,7 +226,7 @@ export default function Quiz() {
                                     </Select>
                                 </FormControl>
                                 <Typography variant="caption" className="text-gray-500">
-                                    Only PDF, PPT, and PPTX files are allowed.
+                                    Only PDF files are allowed.
                                 </Typography>
                                 <Button variant="contained" onClick={handleUpload}>Submit</Button>
                                 {loading ? (
@@ -309,16 +309,19 @@ export default function Quiz() {
                                     ) : (
 
                                         formLink && (
-
                                             <>
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
-                                                    href={formLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
+                                                    // href={formLink}
+                                                    // target="_blank"
+                                                    // rel="noopener noreferrer"
+                                                    onClick={()=>{
+                                                        navigator.clipboard.writeText(formLink);
+                                                        toast.success("Form link copied to clipboard!");
+                                                    }}
                                                 >
-                                                    Form Link
+                                                    Copy form Link
                                                 </Button>
                                                 <Button
                                                     variant="contained"
@@ -347,7 +350,11 @@ export default function Quiz() {
                 </Box>
             </Container>
 
-            <Modal open={open} onClose={handleClose} >
+            <Modal open={open} onClose={(event, reason) => {
+                if (reason !== 'backdropClick') {
+                    handleClose();
+                }
+            }} >
                 <Box sx={{
                     position: "absolute",
                     top: "50%",
