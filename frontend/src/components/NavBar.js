@@ -3,6 +3,7 @@ import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
 import logo from "../assets/Logo.png";
 import { useNavigate } from "react-router-dom";
 import logo2 from "../assets/logo2.jpg";
+import QuizifyLogo from "./Logo";
 export default function NavBar() {
     const navigate = useNavigate();
 
@@ -12,19 +13,10 @@ export default function NavBar() {
     };
     return (
 
-        <AppBar position="static" className="shadow-md" sx={{ background: (theme) => theme.palette.primary.main }}>
+        <AppBar position="sticky" className="shadow-md" sx={{ background: (theme) => theme.palette.primary.main }}>
             <Toolbar className="flex justify-between">
                 <Box className="flex items-center gap-3" onClick={() => navigate('/')}>
-                    {/* <img src={logo} alt="Logo" className="w-10 h-10" /> */}
-                    <Typography
-                        variant="h6"
-                        className="font-bold"
-                        sx={{
-                            color: (theme) => theme.palette.secondary.main, // Text color change
-                        }}
-                    >
-                        Quizify
-                    </Typography>
+                    <QuizifyLogo/>
 
                 </Box>
 

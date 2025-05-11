@@ -19,7 +19,9 @@ export default function Quiz() {
     const [editData, setEditData] = useState([]);
     const [formLink, setFormLink] = useState(null)
     const [editUrl, setEditUrl] = useState(null);
+    const [responseUrl, setResponseUrl] = useState(null);
     const [number, setNumber] = useState(null)
+    const [email, setEmail] = useState(null)
     // const [data, setData] = useState({
     //     questions: [
     //         {
@@ -50,6 +52,7 @@ export default function Quiz() {
                 options: q.options,
                 correct_answer: q.correct_answer
             })),
+            shareEmail: email
         };
         try {
             const response = await fetch("http://127.0.0.1:8000/generate-form", {
@@ -68,13 +71,13 @@ export default function Quiz() {
                 toast.success("Quiz form generated successfully!");
                 setFormLink(result.form_url)
                 setEditUrl(result.edit_url);
+                setResponseUrl(result.response_url);
             } else {
                 throw new Error(result.error || "Failed to generate form");
             }
         } catch (error) {
-            // setError(error.message);
-            console.error("Error generating quiz:", error);
-            toast.error("Failed to generate quiz form, Please check the questions and try again");
+
+            toast.error(error.response?.data?.error || "Failed to generate quiz form, Please check the questions and try again");
         } finally {
             setLinkLoading(false);
         }
@@ -103,6 +106,7 @@ export default function Quiz() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("number", number);
+        // formData.append("email", email);
         try {
             setLoading(true);
             const resp = await fetch(`${url}/upload`, {
@@ -223,8 +227,17 @@ export default function Quiz() {
                                         <MenuItem value="" disabled>Select</MenuItem>
                                         <MenuItem value={5}>5 Questions</MenuItem>
                                         <MenuItem value={10}>10 Questions</MenuItem>
+                                        <MenuItem value={20}>20 Questions</MenuItem>
+
                                     </Select>
                                 </FormControl>
+
+                                <FormControl fullWidth >
+                                    <InputLabel id="question-select-label">Email</InputLabel>
+                                    <Input type="email" onChange={(e) => setEmail(e.target.value)} />
+
+                                </FormControl>
+
                                 <Typography variant="caption" className="text-gray-500">
                                     Only PDF files are allowed.
                                 </Typography>
@@ -310,28 +323,35 @@ export default function Quiz() {
 
                                         formLink && (
                                             <>
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    // href={formLink}
-                                                    // target="_blank"
-                                                    // rel="noopener noreferrer"
-                                                    onClick={()=>{
-                                                        navigator.clipboard.writeText(formLink);
-                                                        toast.success("Form link copied to clipboard!");
-                                                    }}
-                                                >
-                                                    Copy form Link
-                                                </Button>
-                                                <Button
-                                                    variant="contained"
-                                                    color="success"
-                                                    href={editUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    View Responses
-                                                </Button>
+                                                <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-xl shadow-md w-full max-w-2xl">
+                                                    {[
+                                                        { label: 'Form Link', url: formLink, toastMsg: 'Form link copied to clipboard!' },
+                                                        { label: 'Edit Link', url: editUrl, toastMsg: 'Edit link copied to clipboard!' },
+                                                        { label: 'Responses Link', url: responseUrl, toastMsg: 'Responses link copied to clipboard!' },
+                                                    ].map(({ label, url, toastMsg }) => (
+                                                        <div key={label} className="flex items-center justify-between gap-10 bg-white p-3 rounded-lg border">
+                                                            <a
+                                                                href={url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-600 hover:underline truncate max-w-[80%]"
+                                                            >
+                                                                {label}
+                                                            </a>
+                                                            <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                                className="text-sm"
+                                                                onClick={() => {
+                                                                    navigator.clipboard.writeText(url);
+                                                                    toast.success(toastMsg);
+                                                                }}
+                                                            >
+                                                                Copy
+                                                            </Button>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </>
                                         )
                                     )}
