@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import LogoTest from '../assets/LogoTest.png'
 export default function QuizifyLogo() {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -9,11 +9,11 @@ export default function QuizifyLogo() {
   
   return (
     <div 
-      className="flex items-center gap-3 cursor-pointer transition-all duration-300"
+      className="flex items-center cursor-pointer transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative">
+      {/* <div className="relative">
         <div 
           className={`flex items-center justify-center w-12 h-12 rounded-lg text-white font-bold text-xl shadow-lg transition-all duration-300 ${isHovered ? 'scale-110' : ''}`}
           style={{
@@ -22,9 +22,9 @@ export default function QuizifyLogo() {
           }}
         >
           QF
-          {/* <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-300 ${isHovered ? 'animate-pulse' : ''}`}></div> */}
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
+      <img src={LogoTest} height={60} width={60}/>
       <div className="flex flex-col">
         <span className="font-medium text-xl text-white">
           Quizify
