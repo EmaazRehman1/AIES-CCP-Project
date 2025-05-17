@@ -20,17 +20,17 @@ A full-stack web application that allows users to upload a PDF and automatically
 - **Backend**: FastAPI
 - **Model**: LLaMA 3.3 (NVIDIA)
 
-## 🛠️ Getting Started
+# 🛠️ Getting Started
 git clone https://github.com/yourusername/quiz-generation-app.git
 
-# FastApi Backend
+## FastApi Backend
 - cd quiz-generation-app/backend
-# 1. Create and activate a virtual environment
+### 1. Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate 
 
-# 2. Create a requirements.txt file (if not already present)
-✅ Example requirements.txt
+### 2. Create a requirements.txt file (if not already present)
+Example requirements.txt
 fastapi
 uvicorn
 pydantic
@@ -41,18 +41,18 @@ requests
 
 pip install -r requirements.txt
 
-# 3. Run the FastAPI server
+### 3. Run the FastAPI server
 uvicorn main:app --reload
 
 # Frontend (React + MUI)
-#🔧 Prerequisites
+## Prerequisites
 - Node.js (v16+)
 - npm or yarn
 
 cd frontend
 
-# 2. Install dependencies
+### 1. Install dependencies
 npm install  
 
-# 3. Start the React development server
+### 2. Start the React development server
 npm start
