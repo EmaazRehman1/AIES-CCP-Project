@@ -22,13 +22,14 @@ A full-stack web application that allows users to upload a PDF and automatically
 
 ## 🛠️ Getting Started
 git clone https://github.com/yourusername/quiz-generation-app.git
-cd quiz-generation-app/backend
 
-# 2. Create and activate a virtual environment
+# FastApi Backend
+- cd quiz-generation-app/backend
+# 1. Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate 
 
-# 3. Create a requirements.txt file (if not already present)
+# 2. Create a requirements.txt file (if not already present)
 ✅ Example requirements.txt
 fastapi
 uvicorn
@@ -40,10 +41,10 @@ requests
 
 pip install -r requirements.txt
 
-# 5. Run the FastAPI server
+# 3. Run the FastAPI server
 uvicorn main:app --reload
 
-🌐 Frontend (React + MUI)
+# Frontend (React + MUI)
 #🔧 Prerequisites
 - Node.js (v16+)
 - npm or yarn
@@ -51,7 +52,7 @@ uvicorn main:app --reload
 cd frontend
 
 # 2. Install dependencies
-npm install  # or yarn install
+npm install  
 
 # 3. Start the React development server
 npm start
