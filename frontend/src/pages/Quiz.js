@@ -227,16 +227,17 @@ export default function Quiz() {
                                         <MenuItem value="" disabled>Select</MenuItem>
                                         <MenuItem value={5}>5 Questions</MenuItem>
                                         <MenuItem value={10}>10 Questions</MenuItem>
+                                        <MenuItem value={15}>15 Questions</MenuItem>
                                         <MenuItem value={20}>20 Questions</MenuItem>
 
                                     </Select>
                                 </FormControl>
 
-                                <FormControl fullWidth >
+                                {/* <FormControl fullWidth >
                                     <InputLabel id="question-select-label">Email</InputLabel>
                                     <Input type="email" onChange={(e) => setEmail(e.target.value)} />
 
-                                </FormControl>
+                                </FormControl> */}
 
                                 <Typography variant="caption" className="text-gray-500">
                                     Only PDF files are allowed.
@@ -317,7 +318,7 @@ export default function Quiz() {
                                     {linkLoading ? (
                                         <div className="flex items-center gap-2 justify-center flex-col">
                                             <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mt-2"></div>
-                                            <div className="font-bold">Generating link...</div>
+                                            <div>Generating link...</div>
                                         </div>
                                     ) : (
 

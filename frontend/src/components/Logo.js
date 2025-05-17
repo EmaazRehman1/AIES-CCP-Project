@@ -22,7 +22,7 @@ export default function QuizifyLogo() {
           }}
         >
           QF
-          <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-300 ${isHovered ? 'animate-pulse' : ''}`}></div>
+          {/* <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-300 ${isHovered ? 'animate-pulse' : ''}`}></div> */}
         </div>
       </div>
       <div className="flex flex-col">
