@@ -21,7 +21,7 @@ export default function NavBar() {
                 </Box>
 
                 <Box className="md:flex font-mono gap-3">
-                    <Button
+                    {/* <Button
                         disableElevation
                         className="hover:font-semibold"
                         onClick={() => navigate('/quiz')}
@@ -32,7 +32,7 @@ export default function NavBar() {
                         }}
                     >
                         Quiz
-                    </Button>
+                    </Button> */}
                     {/* <Button
                         disableElevation
                         className="hover:font-semibold"
