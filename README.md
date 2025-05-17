@@ -20,6 +20,7 @@ A full-stack web application that allows users to upload a PDF and automatically
 - **Backend**: FastAPI
 - **Model**: LLaMA 3.3 (NVIDIA)
 
+---
 # 🛠️ Getting Started
 git clone https://github.com/yourusername/quiz-generation-app.git
 
@@ -31,13 +32,13 @@ source venv/bin/activate
 
 ### 2. Create a requirements.txt file (if not already present)
 Example requirements.txt
-fastapi
-uvicorn
-pydantic
-python-multipart
-PyMuPDF
-openai 
-requests
+- fastapi
+- uvicorn
+- pydantic
+- python-multipart
+- PyMuPDF
+- openai 
+- requests
 
 pip install -r requirements.txt
 
