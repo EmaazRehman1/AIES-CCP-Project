@@ -25,25 +25,25 @@ A full-stack web application that allows users to upload a PDF and automatically
 git clone https://github.com/yourusername/quiz-generation-app.git
 
 ## FastApi Backend
-cd backend
+    cd backend
 ### 1. Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate 
+    - python -m venv venv
+    - source venv/bin/activate 
 
 ### 2. Create a requirements.txt file (if not already present)
-Example requirements.txt
-- fastapi
-- uvicorn
-- pydantic
-- python-multipart
-- PyMuPDF
-- openai 
-- requests
+    Example requirements.txt
+    - fastapi
+    - uvicorn
+    - pydantic
+    - python-multipart
+    - PyMuPDF
+    - openai 
+    - requests
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 ### 3. Run the FastAPI server
-uvicorn main:app --reload
+    uvicorn main:app --reload
 
 # Frontend (React + MUI)
 ## Prerequisites
