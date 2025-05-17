@@ -27,8 +27,8 @@ git clone https://github.com/yourusername/quiz-generation-app.git
 ## FastApi Backend
     cd backend
 ### 1. Create and activate a virtual environment
-    - python -m venv venv
-    - source venv/bin/activate 
+    python -m venv venv
+    source venv/bin/activate 
 
 ### 2. Create a requirements.txt file (if not already present)
     Example requirements.txt
@@ -50,10 +50,10 @@ git clone https://github.com/yourusername/quiz-generation-app.git
 - Node.js (v16+)
 - npm or yarn
 
-cd frontend
+        cd frontend
 
 ### 1. Install dependencies
-npm install  
+        npm install  
 
 ### 2. Start the React development server
-npm start
+        npm start    
