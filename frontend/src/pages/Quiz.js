@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Box, Container, Typography, Tabs, Tab, Paper, Input, Button, TextField, IconButton, Select, MenuItem } from "@mui/material";
 import NavBar from "../components/NavBar";
 import { Toaster, toast } from 'react-hot-toast';
 import { Modal } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { InputLabel } from "@mui/material";
@@ -87,11 +88,17 @@ export default function Quiz() {
     // };
 
     const handleFileChange = (event) => {
+
         const fileInput = event.target.files[0];
         setFile(fileInput);
     }
 
     const handleUpload = async () => {
+        const isPDF = file.type === "application/pdf" && file.name.endsWith(".pdf");
+        if (!isPDF) {
+            toast.error("Please upload a valid PDF file.");
+            return
+        }
         if (!file) {
             toast.error("Please select a file");
             return;
@@ -121,7 +128,7 @@ export default function Quiz() {
             console.log("resp", resp)
             console.log(data.data)
         } catch (e) {
-            toast.error(e.message || "Failed to upload file");
+            toast.error(e.message || "Failed to upload file. Please upload a valid PDF file.");
         } finally {
             setLoading(false)
         }
@@ -172,12 +179,39 @@ export default function Quiz() {
         setEditData([]);
     };
 
+    const [dragActive, setDragActive] = useState(false);
+
+    const handleDrag = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true);
+        } else if (e.type === "dragleave") {
+            setDragActive(false);
+        }
+    }, []);
+
+    const handleDrop = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            const isPDF = file.type === "application/pdf" && file.name.endsWith(".pdf");
+            if (isPDF) {
+                setFile(file);
+            } else {
+                toast.error("Please upload a valid PDF file.");
+            }
+        }
+    }, []);
+
     return (
         <Box className="flex flex-col" sx={{ background: (theme) => theme.palette.secondary.main, minHeight: '100vh' }}>
             <Toaster />
             <NavBar />
             <Container maxWidth="md" className="flex flex-col items-center flex-1 mt-5">
-                <Typography variant="h4" color="primary" align="center" gutterBottom>
+                <Typography variant="h4" color="primary" align="center" gutterBottom sx={{ fontWeight: 'bold' }}>
                     {/* Quiz Generator */}
                     Create a New Quiz
                 </Typography>
@@ -194,7 +228,7 @@ export default function Quiz() {
                     </Tabs>
                 </Paper> */}
 
-                <Box className="p-4 w-full text-center">
+                {/* <Box className="p-4 w-full text-center">
                     {activeTab === 0 && (
                         <Box className="flex flex-col gap-4 p-4 w-full max-w-md mx-auto">
                             <Typography variant="body1" className="text-center text-gray-600">
@@ -207,8 +241,65 @@ export default function Quiz() {
                                     accept=".pdf"
                                     className="w-full border p-2 rounded cursor-pointer bg-gray-100"
                                     onChange={handleFileChange}
+                                /> */}
+                <Box className="p-4 w-full text-center">
+                    {activeTab === 0 && (
+                        <Box className="flex flex-col gap-4 w-full max-w-md mx-auto">
+                            <Typography variant="body1" className="text-center text-gray-600">
+                                Drag and drop a PDF file here, or click to select
+                            </Typography>
+
+                            <Box
+                                className="relative flex flex-col items-center gap-2"
+                                onDragEnter={handleDrag}
+                                onDragLeave={handleDrag}
+                                onDragOver={handleDrag}
+                                onDrop={handleDrop}
+                            >
+                                <Paper
+                                    elevation={dragActive ? 6 : 2}
+                                    sx={{
+                                        width: '100%',
+                                        p: 4,
+                                        // border: dragActive ? '2px dashed #1976d2' : '2px dashed #ddd',
+                                        backgroundColor: dragActive ? 'rgba(25, 118, 210, 0.08)' : 'background.paper',
+                                        transition: 'all 0.3s ease',
+                                        cursor: 'pointer',
+                                        textAlign: 'center'
+                                    }}
+                                    onClick={() => document.getElementById('file-upload').click()}
+                                >
+                                    {file ? (
+                                        <Typography variant="body1" color="primary">
+                                            {file.name}
+                                        </Typography>
+                                    ) : (
+                                        <>
+                                            <CloudUploadIcon sx={{ fontSize: 50, color: dragActive ? 'primary.main' : 'text.secondary' }} />
+                                            <Typography variant="body1" sx={{ mt: 1 }}>
+                                                Drag your PDF file here or click to browse
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                Only PDF files are accepted
+                                            </Typography>
+                                        </>
+                                    )}
+                                </Paper>
+                                {/* <Input
+                                    id="file-upload"
+                                    type="file"
+                                    accept=".pdf"
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                /> */}
+                                <Input
+                                    id="file-upload"
+                                    type="file"
+                                    accept=".pdf"
+                                    sx={{ display: 'none' }}
+                                    onChange={handleFileChange}
                                 />
-                                <FormControl fullWidth >
+                                <FormControl fullWidth sx={{ mt: 2 }}>
                                     <InputLabel id="question-select-label">Number of Questions</InputLabel>
                                     <Select
                                         labelId="question-select-label"
@@ -239,9 +330,9 @@ export default function Quiz() {
 
                                 </FormControl> */}
 
-                                <Typography variant="caption" className="text-gray-500">
+                                {/* <Typography variant="caption" className="text-gray-500">
                                     Only PDF files are allowed.
-                                </Typography>
+                                </Typography> */}
                                 <Button variant="contained" onClick={handleUpload}>Submit</Button>
                                 {loading ? (
                                     <div className="flex flex-col items-center justify-center">
@@ -340,8 +431,8 @@ export default function Quiz() {
                                                                 {label}
                                                             </a>
                                                             <Button
-                                                            variant="contained"
-                                                            color="primary"
+                                                                variant="contained"
+                                                                color="primary"
                                                                 className="text-sm"
                                                                 onClick={() => {
                                                                     navigator.clipboard.writeText(url);
