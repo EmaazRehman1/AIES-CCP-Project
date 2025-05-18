@@ -1,5 +1,5 @@
 # Quiz Generation App
-## Demo Video: (https://youtu.be/ixiwN623un4)
+## Demo Video: https://youtu.be/ixiwN623un4
 
 
 A full-stack web application that allows users to upload a PDF and automatically generate quiz questions using **LLaMA 3.3 (NVIDIA)** model. Users can review, edit, delete, or add their own questions before exporting them as a Google Form.
