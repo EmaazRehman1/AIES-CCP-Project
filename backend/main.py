@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form,Request
 from fastapi.middleware.cors import CORSMiddleware
-import ollama
 from pydantic import BaseModel
 import json
 import re
