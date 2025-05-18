@@ -326,9 +326,9 @@ export default function Quiz() {
                                             <>
                                                 <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-xl shadow-md w-full max-w-2xl">
                                                     {[
-                                                        { label: 'Form Link', url: formLink, toastMsg: 'Form link copied to clipboard!' },
-                                                        { label: 'Edit Link', url: editUrl, toastMsg: 'Edit link copied to clipboard!' },
-                                                        { label: 'Responses Link', url: responseUrl, toastMsg: 'Responses link copied to clipboard!' },
+                                                        { label: 'Form', url: formLink, toastMsg: 'Form link copied to clipboard!' },
+                                                        { label: 'Edit', url: editUrl, toastMsg: 'Edit link copied to clipboard!' },
+                                                        { label: 'Responses ', url: responseUrl, toastMsg: 'Responses link copied to clipboard!' },
                                                     ].map(({ label, url, toastMsg }) => (
                                                         <div key={label} className="flex items-center justify-between gap-10 bg-white p-3 rounded-lg border">
                                                             <a
